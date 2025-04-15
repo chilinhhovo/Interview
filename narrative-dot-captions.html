@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Narrative Dot Story</title>
+  <!-- Google fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <!-- Add Perfectly Nineties font for quotes -->
+  <style>
+    @font-face {
+      font-family: 'Perfectly Nineties';
+      src: url('https://fonts.cdnfonts.com/css/perfectly-nineties') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+  
+    body { 
+      margin: 0; 
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: white; 
+      overflow-x: hidden;
+      font-size: 20px;
+      text-rendering: optimizeLegibility;
+      line-height: 1.6;
+    }
+
+    .full-width-container {
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+
+    .content-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .content-container {
+        padding: 0 1rem;
+      }
+      
+      body {
+        font-size: 18px;
+      }
+    }
+
+    h1, h2 {
+      margin: 2rem 0 1rem;
+      line-height: 1.3;
+    }
+
+    p {
+      margin: 1rem 0;
+    }
+
+    .byline {
+      color: #666;
+      font-size: 0.9em;
+      margin: 0.5rem 0;
+    }
+
+    .visualization-link {
+      display: inline-block;
+      margin: 2rem 0;
+      padding: 1rem 2rem;
+      background: #f0f0f0;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .visualization-link:hover {
+      background: #e0e0e0;
+    }
+
+    blockquote {
+      margin: 2rem 0;
+      padding: 1rem;
+      border-left: 4px solid #ccc;
+      font-style: italic;
+      color: #444;
+    }
+
+    /* Responsive images */
+    img {
+      max-width: 100%;
+      height: auto;
+      margin: 1rem 0;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 480px) {
+      .content-container {
+        padding: 0 1rem;
+      }
+      
+      h1 {
+        font-size: 1.8em;
+      }
+      
+      h2 {
+        font-size: 1.4em;
+      }
+      
+      .visualization-link {
+        display: block;
+        text-align: center;
+        margin: 1.5rem 0;
+        padding: 0.8rem 1.5rem;
+      }
+    }
+
+    /* Scrolly styles */
+    .scrolly {
+      position: relative;
+      width: 100%;
+      z-index: 3;
+    }
+
+    .step {
+      margin-bottom: 80vh;
+      opacity: 0;
+      height: 0.5px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .step-content {
+      opacity: 1;
+      font-size: 1.25rem;
+      line-height: 1.5;
+      position: relative;
+      z-index: 3;
+    }
+
+    .overlay-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem;
+      border-radius: 8px;
+      max-width: 600px;
+      max-height: 300px;
+      display: inline-block;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay-box.visible {
+      opacity: 1;
+    }
+
+    #scroll-text {
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: #111;
+      line-height: 1.6;
+      opacity: 0;
+      position: relative;
+      width: 100%;
+      height: auto;
+      background: transparent;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: opacity 0.3s ease;
+    }
+
+    #scroll-text.visible {
+      opacity: 1;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: auto;
+    }
+
+    canvas.visible {
+      opacity: 1;
+    }
+
+    /* Rest of your existing styles... */
+  </style>
+  <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.3.0/d3.min.js"></script>
+</head>
+<body>
+
+<!-- Interview section -->
+  <div class="full-width-container">
+    <div class="content-container">
+      <h2>What Makes Humor Land?</h2>
+      <p>We've seen the data — but what about lived experience?</p>
+      <p>Stephen Turban, a Harvard-trained researcher turned stand-up comedian in Vietnam, shared what it's like to learn humor across cultures. Raised in the U.S., he now performs jokes in Vietnamese — a language and culture he didn't grow up with.</p>
+
+      <blockquote>
+        "The biggest barrier for me when learning comedy in Vietnamese wasn't the language — it was understanding what people believe."
+      </blockquote>
+
+      <p>To be funny, he explains, you need two things: something people haven't thought of — and something they believe to be true. Getting the first is easy as a foreigner. The second? Not so much.</p>
+
+      <blockquote>
+        "I might notice something weird, like how southerners sing karaoke in a northern accent. But unless everyone agrees it's true, the joke won't land."
+      </blockquote>
+
+      <p>He describes the challenge as "perspective-taking" — figuring out what people really believe, then twisting that truth just enough to surprise them.</p>
+
+      <p>Turban also highlights one classic technique:</p>
+
+      <blockquote>
+        "I love what I call a deliberate misdirection — like when a 19-year-old says she's dating someone with a five-year age difference, and you reply: 'Wow, what's it like dating a 14-year-old?'" 
+      </blockquote>
+
+      <p>It's unexpected. It's borderline wrong. But it's clear enough to make people laugh.</p>
+
+      <p>Even in our data, we saw this pattern: funny captions often break expectations, flirt with absurdity, and twist something real just enough to surprise. In the end, good comedy requires both math and empathy — and sometimes, karaoke.</p>
+
+      <p>In short: Good captions are short, surprising, and strike a shared truth. Great ones do all three in ten words or less.</p>
+
+      <a href="https://chilinhhovo.github.io/intro-page/">Return to the start</a>
+    </div>
+  </div>
+
+  <script>
+    // Wait for DOM to be fully loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      // First, ensure all required elements exist
+      const scrolly = document.querySelector(".scrolly");
+      const steps = document.querySelectorAll(".step");
+      const canvas = document.getElementById("viz");
+      const context = canvas.getContext("2d");
+      const tooltip = document.getElementById("tooltip");
+      const clusterLabel = document.getElementById("cluster-label");
+      const scrollText = document.getElementById("scroll-text");
+      const overlayBox = document.querySelector(".overlay-box");
+      
+      // Log for debugging
+      console.log("Scrolly element:", scrolly);
+      console.log("Number of steps:", steps.length);
+      
+      // Check if required elements exist
+      if (!scrolly) {
+        console.error("Scrolly container not found");
+        return;
+      }
+      
+      if (!steps.length) {
+        console.error("No step elements found");
+        return;
+      }
+      
+      if (!canvas) {
+        console.error("Canvas element not found");
+        return;
+      }
+
+      const clusterNames = [
+        "Wry Observations", "Grim Irony", "Food & Death", "Playful Absurdity", "Satirical Bureaucracy",
+        "Urban Dread", "Medical Sarcasm", "Death Courtroom", "Anthropomorphic Chaos", "Legal Fatalism"
+      ];
+    
+      let dataFrames = [];
+      let dots = [];
+      let currentFrame = 0;
+      const dotSize = 8;
+    
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        drawDots(true);
+      }
+    
+      function drawDots(interp = false) {
+        if (!dots.length) return;
+        
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        dots.forEach(dot => {
+          dot.x += (dot.tx - dot.x) * 0.2;
+          dot.y += (dot.ty - dot.y) * 0.2;
+          dot.opacity += (dot.tOpacity - dot.opacity) * 0.2;
+          dot.color = dot.highlight ? clusterColors[dot.cluster] : "#ccc";
+    
+          context.globalAlpha = dot.opacity;
+          context.fillStyle = dot.color;
+          context.fillRect(dot.x * canvas.width - dotSize / 2, dot.y * canvas.height - dotSize / 2, dotSize, dotSize);
+        });
+        context.globalAlpha = 1;
+        if (interp) requestAnimationFrame(() => drawDots(true));
+      }
+    
+      const clusterColors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
+    
+      function updateFrame(index) {
+        currentFrame = index;
+        const targetDots = dataFrames[index];
+        
+        if (!targetDots) return;
+    
+        clusterLabel.textContent = (index >= 2 && index <= 11)
+          ? `Cluster ${index - 2}: ${clusterNames[index - 2]}`
+          : "";
+          
+        if (dots.length !== targetDots.length) {
+          dots = targetDots.map(d => ({
+            ...d,
+            x: d.x,
+            y: d.y,
+            tx: d.x,
+            ty: d.y,
+            opacity: d.highlight ? 1 : 0.3,
+            tOpacity: d.highlight ? 1 : 0.3,
+            highlight: d.highlight,
+            caption: d.caption,
+            cluster: d.cluster
+          }));
+        } else {
+          targetDots.forEach((d, i) => {
+            dots[i].tx = d.x;
+            dots[i].ty = d.y;
+            dots[i].tOpacity = d.highlight ? 1 : 0.3;
+            dots[i].highlight = d.highlight;
+            dots[i].caption = d.caption;
+            dots[i].cluster = d.cluster;
+          });
+        }
+    
+        drawDots(true);
+      }
+    
+      canvas.addEventListener("mousemove", (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) / canvas.width;
+        const my = (e.clientY - rect.top) / canvas.height;
+    
+        let found = false;
+        dots.forEach(dot => {
+          const dx = dot.x - mx;
+          const dy = dot.y - my;
+          if (Math.sqrt(dx * dx + dy * dy) < 0.01) {
+            tooltip.style.left = `${e.clientX + 10}px`;
+            tooltip.style.top = `${e.clientY + 10}px`;
+            tooltip.innerHTML = dot.caption;
+            tooltip.style.display = "block";
+            found = true;
+          }
+        });
+        if (!found) tooltip.style.display = "none";
+      });
+
+      function setupScroll() {
+        console.log("Setting up scrollama...");
+        
+        const scroller = scrollama();
+        
+        try {
+          scroller
+            .setup({
+              step: ".step",
+              offset: 0.5,
+              parent: scrolly,
+              debug: true
+            })
+            .onStepEnter((response) => {
+              console.log("Step entered:", response);
+              const el = response.element;
+              const content = el.querySelector(".step-content")?.innerHTML || el.innerHTML;
+              
+              // Show scroll text, overlay box, and canvas when we reach the visualization section
+              if (el.dataset.frame === "0") {
+                scrollText.classList.add('visible');
+                overlayBox.classList.add('visible');
+                canvas.classList.add('visible');
+                resizeCanvas();
+              }
+              
+              scrollText.innerHTML = content;
+              updateFrame(+el.dataset.frame);
+            })
+            .onStepExit((response) => {
+              console.log("Step exited:", response);
+              // Hide scroll text, overlay box, and canvas when we leave the visualization section
+              if (response.direction === "up" && response.element.dataset.frame === "0") {
+                scrollText.classList.remove('visible');
+                overlayBox.classList.remove('visible');
+                canvas.classList.remove('visible');
+              }
+            });
+            
+          console.log("Scrollama setup complete");
+        } catch (error) {
+          console.error("Error setting up scrollama:", error);
+        }
+      }
+    
+      fetch("human_clusters_scroll_frames_v3_REBUILT.json")
+        .then(res => res.json())
+        .then(json => {
+          dataFrames = json;
+          console.log("Loaded", dataFrames.length, "frames");
+          resizeCanvas();
+          updateFrame(0);
+          setupScroll();
+        })
+        .catch(err => console.error("Failed to load JSON:", err));
+    
+      window.addEventListener("resize", () => {
+        resizeCanvas();
+        updateFrame(currentFrame);
+      });
+    });
+  </script>
+  <style>
+    /* Change this to adjust the padding between steps */
+    .step {
+      margin-bottom: 70vh;
+    }
+  </style>
+
+  <style>
+    .visualization-link {
+      display: inline-block;
+      margin: 2rem 0;
+      padding: 1rem 2rem;
+      background: #f0f0f0;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .visualization-link:hover {
+      background: #e0e0e0;
+    }
+  </style>
+
+</body>
+</html>
