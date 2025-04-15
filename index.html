@@ -199,6 +199,30 @@
       opacity: 1;
     }
 
+    .next-page a {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      margin: 2rem auto 0 auto;
+      font-size: 1rem;
+      background: white;
+      color: black;
+      border: 2px solid black;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      text-decoration: none;
+      text-align: center;
+    }
+    .next-page a:hover {
+      background: #f6f6f6;
+      text-decoration: underline;
+    }
+    .next-page {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
     /* Rest of your existing styles... */
   </style>
   <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
@@ -211,8 +235,8 @@
 <body>
 
 <!-- Interview section -->
-<a href="https://chilinhhovo.github.io/intro-page/">Return to the start</a>
   <div class="full-width-container">
+    <p class="next-page"><a href="https://chilinhhovo.github.io/intro-page/">Return to the start</a></p>
     <div class="content-container">
       <h2>What Makes Humor Land?</h2>
       <p>We've seen the data — but what about lived experience?</p>
@@ -240,9 +264,9 @@
 
       <p>Even in our data, we saw this pattern: funny captions often break expectations, flirt with absurdity, and twist something real just enough to surprise. In the end, good comedy requires both math and empathy — and sometimes, karaoke.</p>
 
-      <p>In short: Good captions are short, surprising, and strike a shared truth. Great ones do all three in ten words or less.</p>
+      <p>Good captions are short, surprising, and strike a shared truth. Great ones do all three in ten words or less.</p>
 
-      <a href="https://chilinhhovo.github.io/intro-page/">Return to the start</a>
+      <p class="next-page"><a href="https://chilinhhovo.github.io/intro-page/">Return to the start</a></p>
     </div>
   </div>
 
@@ -436,81 +460,81 @@
       });
     });
 
-    // Three.js scene setup
+    // Three.js scene setup for bouncing Asset 2
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('threeCanvas'), alpha: true });
-    
+
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
-    
+
     // Add lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
-    
+
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(0, 1, 1);
     scene.add(directionalLight);
-    
+
     camera.position.z = 5;
-    
+
     // Load the GLTF model
     const loader = new THREE.GLTFLoader();
     const models = [];
-    
+
     loader.load('Asset 2.gltf', function(gltf) {
       // Create multiple instances
       for(let i = 0; i < 20; i++) {
         const model = gltf.scene.clone();
-        
+
         // Random scale between 0.1 and 0.3
         const scale = 0.1 + Math.random() * 0.2;
         model.scale.set(scale*2, scale*2, scale*2);
-        
+
         // Random position
         model.position.set(
           (Math.random() - 0.5) * 10,
           (Math.random() - 0.5) * 10,
           (Math.random() - 0.5) * 10
         );
-        
+
         // Store initial position for animation
         model.userData.initialY = model.position.y;
         model.userData.speed = 0.001 + Math.random() * 0.002;
         model.userData.rotationSpeed = 0.005 + Math.random() * 0.01;
-        
+
         scene.add(model);
         models.push(model);
       }
     }, undefined, function(error) {
       console.error('Error loading model:', error);
     });
-    
+
     // Animation loop
     function animate() {
       requestAnimationFrame(animate);
-      
+
       // Animate each model
       models.forEach(model => {
         // Floating motion
         model.position.y = model.userData.initialY + Math.sin(Date.now() * model.userData.speed) * 0.5;
-        
+
         // Gentle rotation
         model.rotation.y += model.userData.rotationSpeed;
       });
-      
+
       renderer.render(scene, camera);
     }
-    
+
     // Handle window resize
     window.addEventListener('resize', onWindowResize, false);
-    
+
     function onWindowResize() {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
-    
+
     animate();
   </script>
   <style>
